@@ -74,8 +74,8 @@ if 'yield_data' not in st.session_state:
     st.session_state.yield_data = []
 
 # 5. UI: 00시부터 23시까지 드롭다운 목록 생성 및 업로드
-time_options = [f"{i:02d}시" for i in range(24)]  # ['00시', '01시', ..., '23시'] 자동 생성
-target_time = st.selectbox("🕒 촬영 시간 선택", time_options, index=20)  # 기본값: 20시
+time_options = [f"{i:02d}시" for i in range(24)]
+target_time = st.selectbox("🕒 촬영 시간 선택", time_options, index=20)
 
 uploaded_file = st.file_uploader(
     "📸 현장 모니터 사진 업로드 (1장씩 추가)", 
@@ -102,7 +102,8 @@ if st.button("📥 현재 시간 데이터 추가 및 분석"):
                 STK #02-02: 99.33%
                 """
                 
-                model = genai.GenerativeModel('gemini-flash')
+                # 최신 지원 모델명 적용
+                model = genai.GenerativeModel('gemini-2.5-flash')
                 response = model.generate_content([prompt, img])
                 
                 lines = response.text.strip().split('\n')
