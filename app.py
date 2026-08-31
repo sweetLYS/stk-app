@@ -89,7 +89,6 @@ if st.button("📥 현재 시간 데이터 추가 및 분석"):
     else:
         with st.spinner(f"AI가 {target_time} 데이터를 읽어오는 중..."):
             try:
-                # 핸드폰 사진 포맷/회전 고려 RGB 변환 및 압축
                 img = Image.open(uploaded_file).convert('RGB')
                 img.thumbnail((1024, 1024))
                 
@@ -102,8 +101,8 @@ if st.button("📥 현재 시간 데이터 추가 및 분석"):
                 STK #02-02: 99.33%
                 """
                 
-                # 최신 지원 모델명 적용
-                model = genai.GenerativeModel('gemini-2.5-flash')
+                # 에러 메시지에시 지시한 최신 모델 적용
+                model = genai.GenerativeModel('gemini-3.6-flash')
                 response = model.generate_content([prompt, img])
                 
                 lines = response.text.strip().split('\n')
