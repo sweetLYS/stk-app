@@ -105,7 +105,7 @@ if st.button("📥 현재 시간 데이터 추가 및 분석"):
                 ]
                 """
                 
-                model = genai.GenerativeModel('gemini-2.5-flash')
+                model = genai.GenerativeModel('gemini-3.6-flash')
                 response = model.generate_content([prompt, img])
                 
                 # 안전한 JSON 추출
