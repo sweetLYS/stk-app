@@ -67,8 +67,8 @@ st.markdown(f"""
 
 st.markdown('<p style="font-size:13px; color:#888;">오후 8시 ~ 오전 6시 생산 수율 누적 시스템</p>', unsafe_allow_html=True)
 
-# 3. Gemini AI 설정
-genai.configure(api_key="YOUR_GEMINI_API_KEY")
+# 3. Gemini AI 설정 (기존에 작성하셨던 본인 키 복원)
+genai.configure(api_key="AQ.Ab8RN6LiTRbzvEqsaYGS7o-RZwm5C2TK1hrrUCd2nVKiCxUi9Q")
 
 # 4. 데이터 저장 세션 초기화
 if 'time_records' not in st.session_state:
@@ -108,7 +108,7 @@ if st.button("📥 현재 시간 데이터 추가 및 분석"):
                 model = genai.GenerativeModel('gemini-2.5-flash')
                 response = model.generate_content([prompt, img])
                 
-                # 정규표현식을 활용한 안전한 JSON 추출 (에러 방지)
+                # 안전한 JSON 추출
                 json_match = re.search(r'\[.*\]', response.text, re.DOTALL)
                 if json_match:
                     clean_text = json_match.group(0)
