@@ -5,7 +5,7 @@ import pandas as pd
 
 # 1. 화면 기본 설정
 st.set_page_config(
-    page_title="STK 누적 수율 분석기", 
+    page_title="STK 누적 수율 분석기",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
@@ -30,7 +30,10 @@ table_bg = "#1E1E1E" if st.session_state.theme_mode == 'Dark' else "#F5F5F5"
 
 st.markdown(f"""
     <style>
-    .stApp {{ background-color: {bg_color}; color: {text_color}; }}
+    .stApp {{
+        background-color: {bg_color};
+        color: {text_color};
+    }}
     div[data-testid="stMarkdownContainer"] table {{
         font-size: 13px !important;
         width: 100% !important;
@@ -50,20 +53,21 @@ st.markdown(f"""
         cursor: pointer;
     }}
     div.stForm + div.stButton > button, div.main div.stButton > button:first-child {{
-        height: 3em !important; font-size: 16px !important; font-weight: bold !important;
-        background-color: #4A90E2 !important; color: white !important; border-radius: 10px; width: 100%;
+        height: 3em !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+        background-color: #4A90E2 !important;
+        color: white !important;
+        border-radius: 10px;
+        width: 100%;
     }}
     </style>
 """, unsafe_allow_html=True)
 
 st.markdown('<p style="font-size:13px; color:#888;">오후 8시 ~ 오전 6시 생산 수율 누적 시스템</p>', unsafe_allow_html=True)
 
-# 3. Gemini AI 설정 (Secrets 사용 권장)
-if "GEMINI_API_KEY" in st.secrets:
-    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-else:
-    # Secrets 미설정 시 임시 처리
-    pass
+# 3. Gemini AI 설정
+genai.configure(api_key="AQ.Ab8RN6LiTRbzvEqsaYGS7o-RZwm5C2TK1hrrUCd2nVKiCxUi9Q")
 
 # 4. 데이터 축적을 위한 저장소(세션) 생성
 if 'yield_data' not in st.session_state:
@@ -87,11 +91,12 @@ if st.button("📥 현재 시간 데이터 추가 및 분석"):
             try:
                 # 핸드폰 사진 포맷/회전 고려 RGB 변환 및 압축
                 img = Image.open(uploaded_file).convert('RGB')
-                img.thumbnail((1024, 1024)) 
+                img.thumbnail((1024, 1024))
                 
                 prompt = """
                 제공된 공정 모니터 사진에서 STK 공정(#02-01 ~ #04-01)의 수율(%) 데이터를 전부 찾으세요.
                 오직 항목 이름과 수율 값만 줄바꿈 형태로 출력하세요. 다른 텍스트는 절대 적지 마세요.
+                
                 예시:
                 STK #02-01: 99.44%
                 STK #02-02: 99.33%
@@ -106,14 +111,12 @@ if st.button("📥 현재 시간 데이터 추가 및 분석"):
                         parts = line.split(":")
                         item = parts[0].strip()
                         yield_val = parts[1].strip()
-                        
                         st.session_state.yield_data.append({
                             "시간": target_time,
                             "항목": item,
                             "수율": yield_val
                         })
                 st.success(f"✨ {target_time} 데이터가 성공적으로 축적되었습니다!")
-                
             except Exception as e:
                 st.error(f"⚠️ 오류 발생: {str(e)}")
 
@@ -121,13 +124,10 @@ if st.button("📥 현재 시간 데이터 추가 및 분석"):
 if st.session_state.yield_data:
     st.markdown("---")
     st.markdown("### 📱 STK 타임라인 누적 요약 표")
-    
     df = pd.DataFrame(st.session_state.yield_data)
-    
     try:
         df_pivot = df.pivot(index='항목', columns='시간', values='수율').fillna("-")
         st.dataframe(df_pivot, use_container_width=True)
-        
     except Exception as e:
         st.warning("데이터 정렬 중 잠시 지연이 발생했습니다. 다음 사진을 등록해 주세요.")
 
