@@ -102,7 +102,7 @@ if st.button("📥 현재 시간 데이터 추가 및 분석"):
                 STK #02-02: 99.33%
                 """
                 
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                model = genai.GenerativeModel('gemini-flash')
                 response = model.generate_content([prompt, img])
                 
                 lines = response.text.strip().split('\n')
